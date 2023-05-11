@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepHardware", "rep sprzetu\RepHardware.csproj", "{657517C2-3BD0-40E2-AFC8-F08796C4D383}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepHardware.Domain", "RepHardware.Domain\RepHardware.Domain.csproj", "{9073C947-337A-4938-95F5-669F73108938}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{657517C2-3BD0-40E2-AFC8-F08796C4D383}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{657517C2-3BD0-40E2-AFC8-F08796C4D383}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{657517C2-3BD0-40E2-AFC8-F08796C4D383}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{657517C2-3BD0-40E2-AFC8-F08796C4D383}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9073C947-337A-4938-95F5-669F73108938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9073C947-337A-4938-95F5-669F73108938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9073C947-337A-4938-95F5-669F73108938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9073C947-337A-4938-95F5-669F73108938}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26F7BD11-25BF-43A6-A68F-3D4785950A8B}
+	EndGlobalSection
+EndGlobal

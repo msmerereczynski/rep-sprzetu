@@ -1,0 +1,555 @@
+﻿@model List<HardwareViewModel>
+
+@{
+    ViewData["Title"] = "Home Page";
+
+}
+
+@*<div class="text-center">
+    <h1 class="display-4">Repozytorium sprzętu</h1>
+</div>*@
+<button type="button" class="btn btn-outline-success"id="topBtn" title="Go to top">Top</button>
+    <button type="button" class="btn btn-outline-success" id="btmBtn" title="Go to bottom">Bottom</button>
+<div class="container">
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        
+        <a class="navbar-brand">Repozytorium sprzętu</a>
+            <button class="btn btn-dark shadow" id="btnSwitch" title="Works on double click" onclick="lightDarkmode()">Dark mode/light mode</button>
+            <button type="button" class="btn btn-success" id="AddRowBtn" onclick="AddRowFunction()">Add new row</button>
+        <div class="d-flex" role="search">
+                
+            <input class="form-control me-2" type="search" placeholder="Search" id="searchInput" aria-label="Search">
+            <button type="button" class="btn btn-outline-success" onclick="searchTable()">Search</button>
+                <div class='valid-feedback' id='statusOfSearchingTrue'>Succesfully searched the results</div><div class='invalid-feedback' id='statusOfSearchingFalse'>Results not found</div>
+        </div>
+        
+    </div>
+   
+</nav>
+</div>
+    <table class="table" id="table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Nazwa sprzętu</th>
+        <th scope="col">Tag</th>
+        <th scope="col">Imie, nazwisko właściciela</th>
+        <th scope="col">Data przypisania</th>
+        <th scope="col">Date zakupu</th>
+        <th scope="col">Poprzedni właściciel</th>
+                <th scope="col">Id sprzętu</th>
+                <th scope="col">Filia</th>
+                <th scope="col">Serwis tag</th>
+        <th scope="col">Rok produkcji</th>
+    </tr>
+    
+        @foreach( var item in Model)
+        {
+        <tr>
+        <td id="id"> @item.Id </td>
+        <td> @item.Name
+                <input type="text" id="DescInInput" class="d-none" value="@item.Description" />
+                </td>
+                <td> @string.Join(";", item.Tag) </td>
+                <td> @item.Owner </td>
+                <td> @item.DateOfAssigment.ToString("yyyy-MM-dd")</td>
+                <td> @item.DateOfPurchase.ToString("yyyy-MM-dd")</td>
+                <td> @item.PreviousOwner </td>
+                <td> @item.IdOfHardware</td>
+                <td> @item.Filia </td>
+                <td> @item.SerwisTag</td>
+                <td> @item.DateOfProduction</td>
+                <td><button type='button' class='btn btn-primary btn-edit' id='editButton' onclick='EditRowFunction(this)'>Edit</button></td>
+                <td><button type='button' class='btn btn-danger btn-remove' onclick='OpenModalRemoved()'>Remove</button></td>
+                <td><button type='button' class='btn btn-success btn-accept d-none' id='accept_changes' onclick='SaveChangesEdit(this)'>Save</button></td>
+                <td><button type='button' class='btn btn-info' id='btnDetails' onclick='viewDetails(this)'> Details </button></td>
+                    @*row.insertCell(10).outerHTML = "<td><button type = 'button' class='btn btn-primary start btn-edit'id='editButton' onclick = 'EditRowFunction(this)'>Edit</button></td>"
+                        + " " + "<td><button type = 'button' class='btn btn-danger btn-remove' onclick = 'OpenModalRemoved()'>Remove</button></td><td><button type='button' class='btn btn-success btn-accept' id='accept_changes' onclick='acceptChanges(this)'>Save</button></td> ";
+                    row.insertCell(11).outerHTML = "<td><button type='button' onclick='viewDetails(this)' class='btn btn-info d-none' id='btnDetails'> Details </button></td>"*@
+        </tr>  
+        }
+
+     
+    </thead>
+
+    <tbody>
+        
+    </tbody>
+
+</table>
+
+@*@foreach( var item in Model)
+{
+    <td> @item.Id </td>
+    <td> @item.Name </td>
+}
+*@
+@*
+@foreach (var Item in Model)
+{
+    <p> Item.Name </p>
+}*@
+
+@*<button onclick="test()"></button>*@
+@*<div id="modal_delete" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="turnoff_modal()">&times;</span>
+        <p>Are you sure you want to remove this cell?</p>
+        <button type="button" class="btn btn-danger" onclick="confirmationOfDeletionYes()">remove</button>
+        <button type="button" class="btn btn-secondary" onclick="confirmationOfDeletionNo()">keep</button>
+        
+    </div>
+</div>*@
+<div class="modal" id="modal_delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm row deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="turnoff_modal()"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove this cell?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="confirmationOfDeletionYes()">Remove</button>
+                <button type="button" class="btn btn-secondary" onclick="confirmationOfDeletionNo()" data-dismiss="modal">Keep</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-xl d-none" id="modal_tr_info" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Details about row</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModalOfDetails()"></button>
+                
+            </div>
+            <div class="modal-body" id="modalBodyOfDetails">
+                            
+            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModalOfDetails()" data-dismiss="modal">Dismiss</button>
+                <button type="button" class="btn btn-success" onclick="saveDescripction()" data-dismiss="modal">Save description</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var span;
+    var modal_block;
+    var id=0;
+    var editableRowsAtTheMoment = 0;
+    function AddRowFunction() 
+    {
+        if(editableRowsAtTheMoment == 0){
+        editableRowsAtTheMoment++;
+        var table = document.getElementById("table");
+        var row = table.insertRow();
+        id++;
+        row.insertCell(0).outerHTML = "<th>"+id+"</th>";
+            row.insertCell(1).outerHTML = "<td><input type='text' class='form-control nameOfHardware is-invalid' onclick='validateName()' onchange='validateName()'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div><div class='invalid-feedback'>Value is empty</div></td>";
+            row.insertCell(2).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
+            row.insertCell(3).outerHTML = "<td><input type='text' class='form-control is-invalid owner' onclick='validateOwner()'onchange='validateOwner()'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div><div class='invalid-feedback'>Value is empty</div></td>";
+            row.insertCell(4).outerHTML = "<td><input type='date' class='form-control is-valid' id='date-input1' onchange='validateDate1()'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div><div class='invalid-feedback'>Please select correct date</div></td> ";
+            row.insertCell(5).outerHTML = "<td><input type='date' class='form-control is-valid' id='date-input2' onchange='validateDate2()'><div class='valid-feedback' id='valid-feedback-date2'>Looks good</div><div class='invalid-feedback'>Please select correct date</div></input></td>";
+            document.getElementById("date-input1").valueAsDate = new Date();
+            document.getElementById("date-input2").valueAsDate = new Date();
+        //var input = document.getElementsByClassName('date-input');
+        //var maxDate = new Date();
+        //maxDate.setFullYear(maxDate.getFullYear());
+        //input.max = maxDate.toISOString().split('T')[0];
+
+            row.insertCell(6).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
+            row.insertCell(7).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
+            row.insertCell(8).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
+            row.insertCell(9).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
+            row.insertCell(10).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
+            row.insertCell(11).outerHTML = "<td><button type = 'button' class='btn btn-primary start btn-edit'id='editButton' onclick = 'EditRowFunction(this)'>Edit</button></td>"
+                + " " + "<td><button type = 'button' class='btn btn-danger btn-remove' onclick = 'OpenModalRemoved()'>Remove</button></td><td><button type='button' class='btn btn-success btn-accept' id='accept_changes' onclick='SaveChangesCreate(this)'>Save</button></td> ";
+            row.insertCell(12).outerHTML = "<td><button type='button' onclick='viewDetails(this)' class='btn btn-info d-none' id='btnDetails'> Details </button></td>"
+        //var accept_button = row.getElementById("accept_changes");
+        //accept_button.classList.remove("visually-hidden");
+        //var edit_btn = row.getElementById("editButton");
+        //edit_btn.classList.Add("start");
+        }
+        else {
+            alert("Save unsaved changes");
+        }
+    }
+
+    function OpenModalRemoved()
+    {
+        document.getElementById("modal_delete").style.display = "block";
+        document.getElementById("modal_delete").classList.add("show")
+    
+        modal_block=event.target.parentNode;
+    }
+    function turnoff_modal() 
+    {
+        document.getElementById("modal_delete").style.display = "none";
+    }
+    function confirmationOfDeletionYes()
+    {
+        document.getElementById("modal_delete").style.display = "none";
+        // event.target will be the input element.
+        var td = modal_block;
+        var tr = td.parentNode; // the row to be removed
+        tr.parentNode.removeChild(tr);
+    }
+    function confirmationOfDeletionNo() {
+        document.getElementById("modal_delete").style.display = "none";
+    }
+    function closeModalOfDetails(){
+        document.getElementById("modal_tr_info").classList.add("d-none");
+    }
+    function EditRowFunction(button)
+    {
+        
+        if (editableRowsAtTheMoment==0){
+        editableRowsAtTheMoment++;
+        
+        const row = button.parentNode.parentNode;
+        const cells = row.getElementsByTagName("td");
+            const editBtn = document.getElementById("editButton");
+            editBtn.classList.add("d-none");
+        var accept_button = row.getElementsByClassName("btn-edit");
+        accept_button[0].classList.add("d-none");
+        var accept_button = row.getElementsByClassName("btn-accept");
+        accept_button[0].classList.remove("d-none");
+        const id = row.cells[0].innerText;
+        const nameOfHardware = row.cells[1].innerText;
+        const tag = row.cells[2].innerText;
+        const owner = row.cells[3].innerText;
+        const dateOfassigment = row.cells[4].innerText;
+        const dateOfPurchase = row.cells[5].innerText;
+        const previousOwner = row.cells[6].innerText;
+            const idOfHardware = row.cells[7].innerText;
+            const filia = row.cells[8].innerText;
+            const serwisTag = row.cells[9].innerText;
+            const dateOfProduction = row.cells[10].innerText;
+        const table = document.getElementById("table");
+            cells[1].innerHTML = `<input type='text'  onclick='validateName()' onchange='validateName()'  class="form-control is-valid nameOfHardware" value='${nameOfHardware}'></input><div class='invalid-feedback'>Value is empty</div><div class='valid-feedback'>Looks good</div>`;
+            
+            cells[2].innerHTML = `<input type='text' class="form-control is-valid" value='${tag}'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>`;
+            cells[3].innerHTML = `<input type='text' onclick='validateOwner()' onchange='validateOwner()' class="form-control is-valid owner"  value='${owner}'></input><div class='invalid-feedback'>Value is empty</div><div class='valid-feedback'>Looks good</div>`;
+            cells[4].innerHTML = `<input type='date' class="form-control is-valid" onchange='validateDate1()' id='date-input1' value='${dateOfassigment}'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>`;
+            cells[5].innerHTML = `<input type='date' class="form-control is-valid" onchange='validateDate2()' id='date-input2' value='${dateOfPurchase}'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>`;
+            cells[6].innerHTML = `<input type='text' class="form-control is-valid" value='${previousOwner}'></input><div class='valid-feedback' >Looks good</div>`;
+            cells[7].innerHTML = `<input type='text' class="form-control is-valid" value='${idOfHardware}'></input><div class='valid-feedback' >Looks good</div>`;
+            cells[8].innerHTML = `<input type='text' class="form-control is-valid" value='${filia}'></input><div class='valid-feedback'>Looks good</div>`;
+            cells[9].innerHTML = `<input type='text' class="form-control is-valid" value='${serwisTag}'></input><div class='valid-feedback'>Looks good</div>`;
+            cells[10].innerHTML = `<input type='text' class="form-control is-valid" value='${dateOfProduction}'></input><div class='valid-feedback'>Looks good</div>`;
+            //const resetButtons = document.querySelectorAll('.edit_reset_button');
+
+        //resetButtons.forEach((button) => {
+        //    button.addEventListener('click', () => {
+        //         Find the closest parent <tr> element
+        //        const parentRow = button.closest('tr');
+        //         Find the reset button within the parent row
+        //        const resetButton = parentRow.querySelector('.edit_reset_button');
+        //         Set the innerText of the reset button to "Clean"
+        //        resetButton.innerText = 'Clean';
+        //    });
+        //});
+        //var accept_button = row.getElementsByClassName("visually-hidden");
+        //    accept_button[0].classList.remove("visually-hidden");
+        //if (button.textContent == 'Edit') 
+        //{
+        //    button.textContent = 'Clear';
+        //} 
+        //else 
+        //{
+        //    button.textContent = 'Edit';
+        //}
+        }
+        else {
+            alert("Save unsaved changes");
+        }
+        }
+
+            //const row = button.parentNode.parentNode;
+            //const id = row.cells[0].innerText;
+            //const nameOfHardware = row.cells[1].innerText;
+            //const tag = row.cells[2].innerText;
+            //const owner = row.cells[3].innerText;
+            //const dateOfassigment = row.cells[4].innerText;
+            //const dateOfPurchase = row.cells[5].innerText;
+            //const previousOwner = row.cells[6].innerText;
+            //const table = document.getElementById("table");
+            //const cells = row.getElementsByTagName("td");
+ 
+        
+    function SaveChangesEdit(button) {
+        editableRowsAtTheMoment--;
+        const row = button.parentNode.parentNode;
+        const cells = row.getElementsByTagName("td");
+
+        var values = [];
+        for (let i = 0; i < 11; i++) {
+            if(i!=0){
+            const input = cells[i].getElementsByTagName("input")[0];
+            
+            if (input) {
+                values.push(input.value);
+            } else {
+                values.push("");
+            }
+            }
+            else{
+                values.push(cells[i].innerHTML);
+            }
+        }
+
+        for (let i = 0; i < 11; i++) {
+            cells[i].innerText = values[i];
+        }
+
+
+        var accept_button = row.getElementsByClassName("btn-accept");
+        accept_button[0].classList.add("d-none");
+        const editBtn = document.getElementById("editButton").classList.remove("d-none");
+        const btnDetails = document.getElementById("btnDetails").classList.remove("d-none");
+    }
+    function SaveChangesCreate(button){
+        editableRowsAtTheMoment--;
+        const row = button.parentNode.parentNode;
+        const cells = row.getElementsByTagName("td");
+
+        var values = [];
+        for (let i = 0; i < 10; i++) {
+                const input = cells[i].getElementsByTagName("input")[0];
+                if (input) {
+                    values.push(input.value);
+                }
+                else {
+                    values.push("");
+                }
+            }
+        $.post("/Home/InsertNewElement/",{hardwareList: values},function(wynik){
+
+        });
+    }
+    
+    //function isCorrectDate(inputDate){
+    //    var date = new Date//need the source of text "getelemntbyid" etc;
+    //    var date = new Date(inputDate);
+    //    if(isNaN(date.getTime())){
+    //        //invalid date format
+    //    }
+    //    else{
+    //        //valid date format
+    //    }
+    //}
+
+    //function test(){
+    //    $.post("/Home/TestowaMetoda/",{zmienna: "test"});
+    //}
+    function validateName(){
+        const name = document.getElementsByClassName('nameOfHardware')[0].value.trim();
+        console.log(name);
+
+        if (name == "") {
+            document.getElementsByClassName('nameOfHardware')[0].classList.add('is-invalid');
+        } 
+        else{
+            document.getElementsByClassName('nameOfHardware')[0].classList.add('is-valid');
+            document.getElementsByClassName('nameOfHardware')[0].classList.remove('is-invalid');
+        }
+    }
+    function validateOwner() {
+        const name = document.getElementsByClassName('owner')[0].value.trim();
+        console.log(name);
+
+        if (name == "") {
+            document.getElementsByClassName('owner')[0].classList.add('is-invalid');
+        }
+        else {
+            document.getElementsByClassName('owner')[0].classList.add('is-valid');
+            document.getElementsByClassName('owner')[0].classList.remove('is-invalid');
+        }
+    }
+    function viewDetails(button){
+         const row = button.parentNode.parentNode;
+        const cells = row.getElementsByTagName("td");
+        const id = row.cells[0].innerText;
+        const nameOfHardware = row.cells[1].innerText;
+        const tag = row.cells[2].innerText;
+        const owner = row.cells[3].innerText;
+        const dateOfassigment = row.cells[4].innerText;
+        const dateOfPurchase = row.cells[5].innerText;
+        const previousOwner = row.cells[6].innerText;
+            const idOfHardware = row.cells[7].innerText;
+            const filia = row.cells[8].innerText;
+            const serwisTag = row.cells[9].innerText;
+            const yearOfProduction = row.cells[10].innerText;
+            const table = document.getElementById("table");
+        const modalBody = document.getElementById("modalBodyOfDetails");
+
+        modalBody.innerHTML = `
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6">
+              <p>Nazwa sprzętu: ${nameOfHardware}</p>
+              <p>Imię i nazwisko właściciela: ${owner}</p>
+              <p>Data przypisania: ${dateOfassigment}</p>
+              <p>Data zakupu: ${dateOfPurchase}</p>
+              <p>Poprzedni właściciel: ${previousOwner}</p>
+              <p>Id sprzętu: ${idOfHardware}</p>
+              <p>Filia: ${filia}</p>
+              <p>Serwis tag: ${serwisTag}</p>
+              <p>Rok produkcji: ${yearOfProduction}</p>
+            </div>
+            <div class="col-md-6 d-flex align-items-start justify-content-end">
+                  <textarea id="description" rows="6" class="form-control w-100" rows="4"></textarea>
+                  
+            </div>
+          </div>
+        </div>
+      `;
+
+        document.getElementById("modal_tr_info").classList.remove("d-none");
+        document.getElementById("modal_tr_info").classList.add("d-block");
+    }
+    function saveDescripction(){
+        const description = document.getElementById("description").value;
+        if (description != null) {
+            document.getElementById("DescInInput").value=description;
+        }
+        document.getElementById("modal_tr_info").classList.add("d-none");
+    }
+    function validateDate1() {
+        // Get the input element
+        const dateInput = document.getElementById("date-input1");
+
+        // Get the selected date value
+        const selectedDate = new Date(dateInput.value);
+
+        // Get today's date
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set the time to midnight
+
+        // Check if the selected date is greater than today
+        if (selectedDate > today) {
+            alert("Please select a date that is not greater than today.");
+            dateInput.value = ""; // Clear the input value
+        }
+    }
+    function validateDate2() {
+        // Get the input element
+        const dateInput = document.getElementById("date-input2");
+
+        // Get the selected date value
+        const selectedDate = new Date(dateInput.value);
+
+        // Get today's date
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set the time to midnight
+
+        // Check if the selected date is greater than today
+        if (selectedDate > today) {
+            alert("Please select a date that is not greater than today.");
+            dateInput.value = ""; // Clear the input value
+        }
+        //else{
+        //    dateInput.classList.add("is-valid");
+        //}
+    }
+
+    function searchTable() {
+
+        let input, filter, table, tr, td, i, j, found;
+        input = document.getElementById("searchInput");
+
+        filter = input.value.toUpperCase();
+        table = document.getElementById("table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            found = false;
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+
+            }
+        }
+    }
+    let topBtn = document.getElementById("topBtn");
+    let btmBtn = document.getElementById("btmBtn");
+    let html = document.documentElement;
+    let body = document.body;
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunctionTop();
+        scrollFunctionBottom();
+    };
+
+    function scrollFunctionBottom() {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            // If the user has scrolled to the bottom of the site, hide the bottom button
+            btmBtn.style.display = "none";
+        } else {
+            btmBtn.style.display = "block";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    topBtn.addEventListener("click", function () {
+        html.scrollTop = 0;
+        body.scrollTop = 0;
+    });
+
+    btmBtn.addEventListener("click", function () {
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+
+    function scrollFunctionTop() {
+        if (window.scrollY > 20) {
+            topBtn.style.display = "block";
+        } else {
+            topBtn.style.display = "none";
+        }
+    }
+    function lightDarkmode() {
+        const toggleButton = document.getElementById('btnSwitch');
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-bs-theme', currentTheme);
+
+            if (currentTheme === 'dark') {
+                toggleButton.innerText = 'Light Mode';
+            }
+        }
+
+        function switchTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-bs-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                toggleButton.innerText = 'Dark Mode';
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                toggleButton.innerText = 'Light Mode';
+            }
+        }
+
+        toggleButton.addEventListener('click', switchTheme);
+    }
+
+    lightDarkmode();
+
+</script>
