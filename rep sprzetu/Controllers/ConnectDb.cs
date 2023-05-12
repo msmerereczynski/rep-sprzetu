@@ -52,24 +52,31 @@ namespace rep_sprzetu.Controllers
         public void NewRowInDb(HardwareViewModel hardware)
         {
             CreateDbConnection();
-            var test = hardware.DateOfAssigment.ToString("mm/dd/yyyy");
-            var test2 = hardware.DateOfAssigment.ToString("MM/dd/yyyy");
-            var test3 = hardware.DateOfAssigment.ToString("dd/MM/yyyy");
-            //string query = @$"INSERT INTO hardware (name, description, tag, owner, dateofassigment, dateofpurchase, previousowner, filia, serwistag, idofhardware,dateofproduction)
-            //VALUES ('{hardware.Name}','{hardware.Description}','{hardware.Tag.ToString()}','{hardware.Owner}','{hardware.DateOfAssigment.ToString("MM/dd/yyyy")}','{hardware.DateOfPurchase.ToString("MM/dd/yyyy")}','{hardware.PreviousOwner}','{hardware.Filia}','{hardware.SerwisTag}','{hardware.IdOfHardware}','{hardware.DateOfProduction}')";
             string query = @$"INSERT INTO hardware (name, description, tag, owner, dateofassigment, dateofpurchase, previousowner, filia, serwistag, idofhardware,dateofproduction)
-            VALUES ('{hardware.Name}','{string.Join(";",hardware.Tag)}','{hardware.Owner}','{hardware.DateOfAssigment.ToString("yyyyMMdd")}','{hardware.DateOfPurchase.ToString("yyyyMMdd")}','{hardware.PreviousOwner}','{hardware.Filia}','{hardware.SerwisTag}','{hardware.IdOfHardware}','{hardware.DateOfProduction}')";
+            VALUES ('{hardware.Name}','{hardware.Description}','{string.Join(";",hardware.Tag)}','{hardware.Owner}','{hardware.DateOfAssigment.ToString("yyyyMMdd")}','{hardware.DateOfPurchase.ToString("yyyyMMdd")}','{hardware.PreviousOwner}','{hardware.Filia}','{hardware.SerwisTag}','{hardware.IdOfHardware}','{hardware.DateOfProduction}')";
             var cmd = new OracleCommand(query, con);
             var reader = cmd.ExecuteNonQuery(); 
-            //if (reader.)
-            //{
-            //    //Sukces
-            //}
-            //else
-            //{
-            //    //Nie udało się zrobić inserta.
-            //}
+        }
 
+        public void DeleteRowInDb(string rowToDelete)
+        {
+            CreateDbConnection();
+            string query = @$"DELETE FROM hardware WHERE id='{rowToDelete}'";
+            var cmd = new OracleCommand(query, con);
+            var reader = cmd.ExecuteNonQuery();
+        }
+        public string SelectMissingDesc(string id)
+        {
+            CreateDbConnection();
+            string desc = "";
+            string query = @$"SELECT description FROM HARDWARE WHERE id = '{id}'";
+            var cmd = new OracleCommand(query, con);
+            var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                desc = reader.GetString(0);
+            }
+            return desc;
         }
 
     }

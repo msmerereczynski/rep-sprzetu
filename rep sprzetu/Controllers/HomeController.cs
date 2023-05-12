@@ -51,8 +51,27 @@ namespace rep_sprzetu.Controllers
             hardware.DateOfProduction = Convert.ToInt32(hardwareList[10]);
             ConnectDb connectDb = new ConnectDb();
             connectDb.NewRowInDb(hardware);
+            connectDb.Close();
 
-            return View();
+            return RedirectToAction("Index");
+            
         }
+
+        public IActionResult DeleteElement(string rowToDelete)
+        {
+            ConnectDb connectDb = new ConnectDb();
+            connectDb.DeleteRowInDb(rowToDelete.Trim());
+            connectDb.Close();
+            return RedirectToAction("Index");
+        }
+        public IActionResult SelectMissingDesc(string id)
+        {
+            ConnectDb connectDb = new ConnectDb();
+            
+            string desc = connectDb.SelectMissingDesc(id.Trim());
+            connectDb.Close();
+            return Json(desc);
+        }
+
     }
 }

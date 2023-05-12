@@ -101,6 +101,94 @@
         
     </div>
 </div>*@
+<div class="modal modal-xl" id="modal_AddNewRow" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dodaj nowy wiersz</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="turnoff_modal()"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContentAddRow">
+                <div class="container-fluid">
+                <div class="row">
+
+                        <div class="col-sm-6">
+                            @*NAZWA*@
+                            <label>Nazwa</label>
+                            <input id="nazwaSprzetuInput" type='text' class='form-control is-invalid' onclick='validateName()' onchange='validateName()'>
+                            <div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>
+                            <div class='invalid-feedback'>Value is empty</div>
+
+                            @*TAG*@
+                            <label>Tag</label>
+                            <input type='text' id="tagInput" class='form-control is-valid'>
+                            <div class='valid-feedback' id='validFeedbackTag'>Looks good</div>
+
+                            @*Imie, nazwisko właściciela*@
+                            <label>Właściciel</label>
+                            <input type='text' id="ownerInput" class='form-control is-invalid owner' onclick='validateOwner()' onchange='validateOwner()'>
+                            <div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>
+                            <div class='invalid-feedback'>Value is empty</div>
+
+                            @*Data przypisania*@
+                            <label>Data przypisania</label>
+                            <input type='date' id='dataPrzypisania' class='form-control is-valid' onchange='validateDate1()'>
+                            <div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>
+                            <div class='invalid-feedback'>Please select correct date</div>
+
+                            @*Data zakupu*@
+                            <label>Data zakupu</label>
+                            <input type='date' id="dataZakupuInput" class='form-control is-valid' onchange='validateDate2()'>
+                            <div class='valid-feedback' id='valid-feedback-date2'>Looks good</div>
+                            <div class='invalid-feedback'>Please select correct date</div>
+
+                            @*Poprzedni właściciel*@
+                            <label>Poprzedni właściciel</label>
+                            <input type='text' id="preOwnerInput" class='form-control is-valid'>
+                            <div class='valid-feedback' id='validFeedbackPreOwner'>Looks good</div>
+
+                            @*Id sprzętu*@
+                            <label>Id sprzętu</label>
+                            <input type='text' id="idOfHardwareInput" class='form-control is-valid'>
+                            <div class='valid-feedback'>Looks good</div>
+                            <div class='invalid-feedback'>Value is empty</div>
+
+                            @*Filia*@
+                            <label>Filia</label>
+                            <input type='text' id="FiliaInput" class='form-control is-valid'>
+                            <div class='valid-feedback'>Looks good</div>
+                            <div class='invalid-feedback'>Value is empty</div>
+
+                            @*Serwis tag*@
+                            <label>Serwis tag</label>
+                            <input type='text' id="serwisTagInput" class='form-control is-valid'>
+                            <div class='valid-feedback'>Looks good</div>
+                            <div class='invalid-feedback'>Value is empty</div>
+
+                            @*Rok produkcji*@
+                            <label>Rok produkcji</label>
+                            <input type='text' id="yearOfProductionInput" class='form-control is-valid'>
+                            <div class='valid-feedback'>Looks good</div>
+                            <div class='invalid-feedback'>Value is empty</div>
+                        </div>
+                        
+            
+            
+                    <div id="divOpis" class="col-sm-6">
+                        <label>Opis</label>
+                        <textarea id="description" rows="6" class="form-control w-100"></textarea>
+                    </div>
+            </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="SaveChangesCreate()">Dodaj</button>
+                <button type="button" class="btn btn-secondary" onclick="confirmationOfDeletionNo()" data-dismiss="modal">Anuluj</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal" id="modal_delete" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -119,7 +207,7 @@
     </div>
 </div>
 
-<div class="modal modal-xl d-none" id="modal_tr_info" tabindex="-1" role="dialog">
+<div class="modal modal-xl" id="modal_tr_info" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -144,42 +232,21 @@
     var modal_block;
     var id=0;
     var editableRowsAtTheMoment = 0;
-    function AddRowFunction() 
+    function GetDescForDetails(button)
     {
-        if(editableRowsAtTheMoment == 0){
-        editableRowsAtTheMoment++;
-        var table = document.getElementById("table");
-        var row = table.insertRow();
-        id++;
-        row.insertCell(0).outerHTML = "<th>"+id+"</th>";
-            row.insertCell(1).outerHTML = "<td><input type='text' class='form-control nameOfHardware is-invalid' onclick='validateName()' onchange='validateName()'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div><div class='invalid-feedback'>Value is empty</div></td>";
-            row.insertCell(2).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
-            row.insertCell(3).outerHTML = "<td><input type='text' class='form-control is-invalid owner' onclick='validateOwner()'onchange='validateOwner()'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div><div class='invalid-feedback'>Value is empty</div></td>";
-            row.insertCell(4).outerHTML = "<td><input type='date' class='form-control is-valid' id='date-input1' onchange='validateDate1()'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div><div class='invalid-feedback'>Please select correct date</div></td> ";
-            row.insertCell(5).outerHTML = "<td><input type='date' class='form-control is-valid' id='date-input2' onchange='validateDate2()'><div class='valid-feedback' id='valid-feedback-date2'>Looks good</div><div class='invalid-feedback'>Please select correct date</div></input></td>";
-            document.getElementById("date-input1").valueAsDate = new Date();
-            document.getElementById("date-input2").valueAsDate = new Date();
-        //var input = document.getElementsByClassName('date-input');
-        //var maxDate = new Date();
-        //maxDate.setFullYear(maxDate.getFullYear());
-        //input.max = maxDate.toISOString().split('T')[0];
+        const row = button.parentNode.parentNode;
+        var id = row.getElementsByTagName("td")[0].innerText;
+        $.post("/Home/SelectMissingDesc/", { id: id }, function (wynik) {
+            document.getElementById("description").innerHTML = wynik;
+        });
+    }
+    function AddRowFunction() 
+    {        
+        var table = document.getElementById("modalBodyContentAddRow");
+        var modalOfCreate = document.getElementById("modal_AddNewRow");
+        modalOfCreate.style.display = "inline";
+        modalOfCreate.classList.add('d-block');
 
-            row.insertCell(6).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
-            row.insertCell(7).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
-            row.insertCell(8).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
-            row.insertCell(9).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
-            row.insertCell(10).outerHTML = "<td><input type='text' class='form-control is-valid'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div></td>";
-            row.insertCell(11).outerHTML = "<td><button type = 'button' class='btn btn-primary start btn-edit'id='editButton' onclick = 'EditRowFunction(this)'>Edit</button></td>"
-                + " " + "<td><button type = 'button' class='btn btn-danger btn-remove' onclick = 'OpenModalRemoved()'>Remove</button></td><td><button type='button' class='btn btn-success btn-accept' id='accept_changes' onclick='SaveChangesCreate(this)'>Save</button></td> ";
-            row.insertCell(12).outerHTML = "<td><button type='button' onclick='viewDetails(this)' class='btn btn-info d-none' id='btnDetails'> Details </button></td>"
-        //var accept_button = row.getElementById("accept_changes");
-        //accept_button.classList.remove("visually-hidden");
-        //var edit_btn = row.getElementById("editButton");
-        //edit_btn.classList.Add("start");
-        }
-        else {
-            alert("Save unsaved changes");
-        }
     }
 
     function OpenModalRemoved()
@@ -199,6 +266,10 @@
         // event.target will be the input element.
         var td = modal_block;
         var tr = td.parentNode; // the row to be removed
+        var rowToDeleteValue = tr.getElementsByTagName("td")[0].innerText;
+        $.post("/Home/DeleteElement/", { rowToDelete: rowToDeleteValue }, function (wynik) {
+            document.location.reload();
+        });
         tr.parentNode.removeChild(tr);
     }
     function confirmationOfDeletionNo() {
@@ -315,23 +386,22 @@
         const editBtn = document.getElementById("editButton").classList.remove("d-none");
         const btnDetails = document.getElementById("btnDetails").classList.remove("d-none");
     }
-    function SaveChangesCreate(button){
-        editableRowsAtTheMoment--;
-        const row = button.parentNode.parentNode;
-        const cells = row.getElementsByTagName("td");
-
+    function SaveChangesCreate(){
         var values = [];
-        for (let i = 0; i < 10; i++) {
-                const input = cells[i].getElementsByTagName("input")[0];
-                if (input) {
-                    values.push(input.value);
-                }
-                else {
-                    values.push("");
-                }
-            }
-        $.post("/Home/InsertNewElement/",{hardwareList: values},function(wynik){
+        values.push(document.getElementById("nazwaSprzetuInput").value);
+        values.push(document.getElementById("tagInput").value);
+        values.push(document.getElementById("description").value);
+        values.push(document.getElementById("ownerInput").value);
+        values.push(document.getElementById("dataPrzypisania").value);
+        values.push(document.getElementById("dataZakupuInput").value);
+        values.push(document.getElementById("preOwnerInput").value);
+        values.push(document.getElementById("idOfHardwareInput").value);
+        values.push(document.getElementById("FiliaInput").value);
+        values.push(document.getElementById("serwisTagInput").value);
+        values.push(document.getElementById("yearOfProductionInput").value);
 
+        $.post("/Home/InsertNewElement/",{hardwareList: values},function(wynik){
+        document.location.reload();
         });
     }
     
@@ -414,6 +484,7 @@
 
         document.getElementById("modal_tr_info").classList.remove("d-none");
         document.getElementById("modal_tr_info").classList.add("d-block");
+        GetDescForDetails(button);
     }
     function saveDescripction(){
         const description = document.getElementById("description").value;
