@@ -60,7 +60,7 @@
                 <td> @item.Filia </td>
                 <td> @item.SerwisTag</td>
                 <td> @item.DateOfProduction</td>
-                <td><button type='button' class='btn btn-primary btn-edit' id='editButton' onclick='EditRowFunction(this)'>Edit</button></td>
+                @*<td><button type='button' class='btn btn-primary btn-edit' id='editButton' onclick='EditRowFunction(this)'>Edit</button></td>*@
                 <td><button type='button' class='btn btn-danger btn-remove' onclick='OpenModalRemoved()'>Remove</button></td>
                 <td><button type='button' class='btn btn-success btn-accept d-none' id='accept_changes' onclick='SaveChangesEdit(this)'>Save</button></td>
                 <td><button type='button' class='btn btn-info' id='btnDetails' onclick='viewDetails(this)'> Details </button></td>
@@ -237,7 +237,7 @@
         const row = button.parentNode.parentNode;
         var id = row.getElementsByTagName("td")[0].innerText;
         $.post("/Home/SelectMissingDesc/", { id: id }, function (wynik) {
-            document.getElementById("description").innerHTML = wynik;
+            document.getElementById("description").value = wynik;
         });
     }
     function AddRowFunction() 
@@ -278,70 +278,70 @@
     function closeModalOfDetails(){
         document.getElementById("modal_tr_info").classList.add("d-none");
     }
-    function EditRowFunction(button)
-    {
+    //function EditRowFunction(button)
+    //{
         
-        if (editableRowsAtTheMoment==0){
-        editableRowsAtTheMoment++;
+    //    if (editableRowsAtTheMoment==0){
+    //    editableRowsAtTheMoment++;
         
-        const row = button.parentNode.parentNode;
-        const cells = row.getElementsByTagName("td");
-            const editBtn = document.getElementById("editButton");
-            editBtn.classList.add("d-none");
-        var accept_button = row.getElementsByClassName("btn-edit");
-        accept_button[0].classList.add("d-none");
-        var accept_button = row.getElementsByClassName("btn-accept");
-        accept_button[0].classList.remove("d-none");
-        const id = row.cells[0].innerText;
-        const nameOfHardware = row.cells[1].innerText;
-        const tag = row.cells[2].innerText;
-        const owner = row.cells[3].innerText;
-        const dateOfassigment = row.cells[4].innerText;
-        const dateOfPurchase = row.cells[5].innerText;
-        const previousOwner = row.cells[6].innerText;
-            const idOfHardware = row.cells[7].innerText;
-            const filia = row.cells[8].innerText;
-            const serwisTag = row.cells[9].innerText;
-            const dateOfProduction = row.cells[10].innerText;
-        const table = document.getElementById("table");
-            cells[1].innerHTML = `<input type='text'  onclick='validateName()' onchange='validateName()'  class="form-control is-valid nameOfHardware" value='${nameOfHardware}'></input><div class='invalid-feedback'>Value is empty</div><div class='valid-feedback'>Looks good</div>`;
+    //    const row = button.parentNode.parentNode;
+    //    const cells = row.getElementsByTagName("td");
+    //        const editBtn = document.getElementById("editButton");
+    //        editBtn.classList.add("d-none");
+    //    var accept_button = row.getElementsByClassName("btn-edit");
+    //    accept_button[0].classList.add("d-none");
+    //    var accept_button = row.getElementsByClassName("btn-accept");
+    //    accept_button[0].classList.remove("d-none");
+    //    const id = row.cells[0].innerText;
+    //    const nameOfHardware = row.cells[1].innerText;
+    //    const tag = row.cells[2].innerText;
+    //    const owner = row.cells[3].innerText;
+    //    const dateOfassigment = row.cells[4].innerText;
+    //    const dateOfPurchase = row.cells[5].innerText;
+    //    const previousOwner = row.cells[6].innerText;
+    //        const idOfHardware = row.cells[7].innerText;
+    //        const filia = row.cells[8].innerText;
+    //        const serwisTag = row.cells[9].innerText;
+    //        const dateOfProduction = row.cells[10].innerText;
+    //    const table = document.getElementById("table");
+    //        cells[1].innerHTML = `<input type='text'  onclick='validateName()' onchange='validateName()'  class="form-control is-valid nameOfHardware" value='${nameOfHardware}'></input><div class='invalid-feedback'>Value is empty</div><div class='valid-feedback'>Looks good</div>`;
             
-            cells[2].innerHTML = `<input type='text' class="form-control is-valid" value='${tag}'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>`;
-            cells[3].innerHTML = `<input type='text' onclick='validateOwner()' onchange='validateOwner()' class="form-control is-valid owner"  value='${owner}'></input><div class='invalid-feedback'>Value is empty</div><div class='valid-feedback'>Looks good</div>`;
-            cells[4].innerHTML = `<input type='date' class="form-control is-valid" onchange='validateDate1()' id='date-input1' value='${dateOfassigment}'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>`;
-            cells[5].innerHTML = `<input type='date' class="form-control is-valid" onchange='validateDate2()' id='date-input2' value='${dateOfPurchase}'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>`;
-            cells[6].innerHTML = `<input type='text' class="form-control is-valid" value='${previousOwner}'></input><div class='valid-feedback' >Looks good</div>`;
-            cells[7].innerHTML = `<input type='text' class="form-control is-valid" value='${idOfHardware}'></input><div class='valid-feedback' >Looks good</div>`;
-            cells[8].innerHTML = `<input type='text' class="form-control is-valid" value='${filia}'></input><div class='valid-feedback'>Looks good</div>`;
-            cells[9].innerHTML = `<input type='text' class="form-control is-valid" value='${serwisTag}'></input><div class='valid-feedback'>Looks good</div>`;
-            cells[10].innerHTML = `<input type='text' class="form-control is-valid" value='${dateOfProduction}'></input><div class='valid-feedback'>Looks good</div>`;
-            //const resetButtons = document.querySelectorAll('.edit_reset_button');
+    //        cells[2].innerHTML = `<input type='text' class="form-control is-valid" value='${tag}'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>`;
+    //        cells[3].innerHTML = `<input type='text' onclick='validateOwner()' onchange='validateOwner()' class="form-control is-valid owner"  value='${owner}'></input><div class='invalid-feedback'>Value is empty</div><div class='valid-feedback'>Looks good</div>`;
+    //        cells[4].innerHTML = `<input type='date' class="form-control is-valid" onchange='validateDate1()' id='date-input1' value='${dateOfassigment}'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>`;
+    //        cells[5].innerHTML = `<input type='date' class="form-control is-valid" onchange='validateDate2()' id='date-input2' value='${dateOfPurchase}'></input><div class='valid-feedback' id='valid-feedback-date1'>Looks good</div>`;
+    //        cells[6].innerHTML = `<input type='text' class="form-control is-valid" value='${previousOwner}'></input><div class='valid-feedback' >Looks good</div>`;
+    //        cells[7].innerHTML = `<input type='text' class="form-control is-valid" value='${idOfHardware}'></input><div class='valid-feedback' >Looks good</div>`;
+    //        cells[8].innerHTML = `<input type='text' class="form-control is-valid" value='${filia}'></input><div class='valid-feedback'>Looks good</div>`;
+    //        cells[9].innerHTML = `<input type='text' class="form-control is-valid" value='${serwisTag}'></input><div class='valid-feedback'>Looks good</div>`;
+    //        cells[10].innerHTML = `<input type='text' class="form-control is-valid" value='${dateOfProduction}'></input><div class='valid-feedback'>Looks good</div>`;
+    //        //const resetButtons = document.querySelectorAll('.edit_reset_button');
 
-        //resetButtons.forEach((button) => {
-        //    button.addEventListener('click', () => {
-        //         Find the closest parent <tr> element
-        //        const parentRow = button.closest('tr');
-        //         Find the reset button within the parent row
-        //        const resetButton = parentRow.querySelector('.edit_reset_button');
-        //         Set the innerText of the reset button to "Clean"
-        //        resetButton.innerText = 'Clean';
-        //    });
-        //});
-        //var accept_button = row.getElementsByClassName("visually-hidden");
-        //    accept_button[0].classList.remove("visually-hidden");
-        //if (button.textContent == 'Edit') 
-        //{
-        //    button.textContent = 'Clear';
-        //} 
-        //else 
-        //{
-        //    button.textContent = 'Edit';
-        //}
-        }
-        else {
-            alert("Save unsaved changes");
-        }
-        }
+    //    //resetButtons.forEach((button) => {
+    //    //    button.addEventListener('click', () => {
+    //    //         Find the closest parent <tr> element
+    //    //        const parentRow = button.closest('tr');
+    //    //         Find the reset button within the parent row
+    //    //        const resetButton = parentRow.querySelector('.edit_reset_button');
+    //    //         Set the innerText of the reset button to "Clean"
+    //    //        resetButton.innerText = 'Clean';
+    //    //    });
+    //    //});
+    //    //var accept_button = row.getElementsByClassName("visually-hidden");
+    //    //    accept_button[0].classList.remove("visually-hidden");
+    //    //if (button.textContent == 'Edit') 
+    //    //{
+    //    //    button.textContent = 'Clear';
+    //    //} 
+    //    //else 
+    //    //{
+    //    //    button.textContent = 'Edit';
+    //    //}
+    //    }
+    //    else {
+    //        alert("Save unsaved changes");
+    //    }
+    //    }
 
             //const row = button.parentNode.parentNode;
             //const id = row.cells[0].innerText;
