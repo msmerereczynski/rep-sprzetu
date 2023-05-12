@@ -68,7 +68,7 @@ namespace rep_sprzetu.Controllers
         {
             ConnectDb connectDb = new ConnectDb();
             
-            string desc = connectDb.SelectMissingDesc(id.Trim());
+            string desc = connectDb.SelectMissingDesc(id);
             connectDb.Close();
             return Json(desc);
         }

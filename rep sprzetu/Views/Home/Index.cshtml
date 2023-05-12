@@ -237,7 +237,7 @@
         const row = button.parentNode.parentNode;
         var id = row.getElementsByTagName("td")[0].innerText;
         $.post("/Home/SelectMissingDesc/", { id: id }, function (wynik) {
-            document.getElementById("description").value = wynik;
+            document.getElementById("description").value += wynik;
         });
     }
     function AddRowFunction() 
